@@ -1,0 +1,23 @@
+{
+    "user": {
+      "username": "johndoe",
+      "password": "mypassword",
+      "firstname": "John",
+      "lastname": "Doe",
+      "email": "johndoe@example.com",
+      "country": "United States",
+      "birthdate": "1990-01-01",
+      "newsletter": true
+    },
+    "user2": {
+      "username": "janedoe",
+      "password": "mypassword",
+      "firstname": "Jane",
+      "lastname": "Doe",
+      "email": "janedoe@example.com",
+      "country": "Canada",
+      "birthdate": "1992-05-12",
+      "newsletter": false
+    }
+  }
+  

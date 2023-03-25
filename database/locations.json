@@ -1,0 +1,21 @@
+{
+    "location1": {
+        "name": "Croyde Bay",
+        "lat": 51.13054334663315,
+        "lng": -4.238056744228542,
+        "favourited": false
+    },
+    "location2": {
+        "name": "Bantham",
+        "lat": 50.278352695882134, 
+        "lng": -3.8785862177221815,
+        "favourited": false
+
+    },
+    "location3": {
+        "name": "Lynton",
+        "lat": 51.234602164689065, 
+        "lng": -3.8267505152856858,
+        "favourited": false
+    }
+}
