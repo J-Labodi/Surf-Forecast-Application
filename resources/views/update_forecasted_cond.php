@@ -11,25 +11,12 @@ $t=date('d-m-Y');
 $today = date("D",strtotime($t));
 
 $today_plus_1 = date("D",strtotime("+1 day"));
-echo $today_plus_1;
-
 $today_plus_2 = date("D",strtotime("+2 day"));
-echo $today_plus_2;
-
 $today_plus_3 = date("D",strtotime("+3 day"));
-echo $today_plus_3;
-
 $today_plus_4 = date("D",strtotime("+4 day"));
-echo $today_plus_4;
-
 $today_plus_5 = date("D",strtotime("+5 day"));
-echo $today_plus_5;
-
 $today_plus_6 = date("D",strtotime("+6 day"));
-echo $today_plus_6;
-
 $today_plus_7 = date("D",strtotime("+7 day"));
-echo $today_plus_7;
 
 
 
