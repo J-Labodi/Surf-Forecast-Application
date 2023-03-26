@@ -78,12 +78,14 @@ function getDataByDay($day){
     // calculate avg of waveheights
     $a = array_filter($wave_height_array);
     $average = array_sum($a)/count($a);
-    echo $average;
 
-    return $data_array;
+    return array($average, $data_array);
 }
 
-$data_by_day = getDataByDay("today");
+$data_from_function = getDataByDay("today");
+
+$avg_wave_height = $data_from_function[0];
+$data_by_day = $data_from_function[1];
 
 
 ?>

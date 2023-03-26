@@ -11,12 +11,17 @@ $t_plus_eightdays = $t_unix + 691200;
 
 
 // PULL lat and lng from DB
+// PULL lat and lng from DB
+// PULL lat and lng from DB
 $collection = $client->forecast->locations;
-$result = $collection->findOne([
-    'locations.name' => $location
-]);
-$lat = $result->locations[0]->lat;
-$lng = $result->locations[0]->lng;
+$result = $collection->findOne(['locations.name' => $location]);
+foreach ($result->locations as $loc) {
+    if ($loc->name === $location) {
+        $lat = $loc->lat;
+        $lng = $loc->lng;
+        break;
+    }
+}
 
 
 function callAPI($lat, $lng){
@@ -48,6 +53,7 @@ function callAPI($lat, $lng){
 
 $data = callApi($lat, $lng);
 $obj = json_decode($data); // convert JSON String to PHP Object
+// -----------------------------------------------------------------
 
 // Trim the redundant data 
 $count = 0;
