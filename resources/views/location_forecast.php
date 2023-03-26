@@ -5,6 +5,87 @@ include('config.php');
 include('update_forecasted_cond.php');
 $location = $_GET['location'];
 
+
+$collection = $client->forecast->forecasted_conditions;
+$cursor = $collection->find();
+
+// look for correct location's document
+foreach ($cursor as $document) {
+    if($document->name == $location){
+        $data = $document;
+    }
+}
+
+
+// function to be called loadup and async 
+function getDataByDay($day){
+    // set range to obtain data from database
+    switch ($day) {
+        case "today":
+            $x = 0;
+            $y = 8;
+          break;
+        case "today+1":
+            $x = 9;
+            $y = 16;
+          break;
+        case "today+2":
+            $x = 17;
+            $y = 24;
+          break;
+        case "today+3":
+            $x = 25;
+            $y = 32;
+          break;
+        case "today+4":
+            $x = 33;
+            $y = 40;
+          break;
+        case "today+5":
+            $x = 41;
+            $y = 48;
+          break;
+        case "today+6":
+            $x = 49;
+            $y = 56;
+          break;
+        case "today+7":
+            $x = 57;
+            $y = 64;
+          break;
+    }
+
+    // obtain data for the day and collect waveheights values
+    global $data;
+    $data_array = array();
+    $wave_height_array = array();
+    $counter = 0;
+    foreach($data->conditions as $obj){
+        $counter++;
+        if ($counter >= $x && $counter <= $y) {
+            //print_r($obj);
+            //echo '<hr>';
+            // push into array
+            array_push($data_array, $obj);
+            foreach($obj as $k => $v){
+                if ($k == 'waveHeight'){
+                    array_push($wave_height_array, $v);
+                }
+            }
+        }
+    }
+
+    // calculate avg of waveheights
+    $a = array_filter($wave_height_array);
+    $average = array_sum($a)/count($a);
+    echo $average;
+
+    return $data_array;
+}
+
+$data_by_day = getDataByDay("today");
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,83 +141,83 @@ $location = $_GET['location'];
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">12am</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[0]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[0]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[0]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[0]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[0]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[0]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[0]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3am</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[1]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[1]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[1]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[1]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[1]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[1]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[1]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6am</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[2]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[2]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[2]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[2]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[2]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[2]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[2]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9am</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[3]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[3]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[3]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[3]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[3]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[3]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[3]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">Noon</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[4]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[4]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[4]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[4]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[4]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[4]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[4]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3pm</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[5]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[5]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[5]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[5]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[5]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[5]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[5]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6pm</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[6]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[6]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[6]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[6]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[6]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[6]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[6]['airTemperature'] . '</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9pm</td>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
+            echo '<td>' . $data_by_day[7]['waveHeight'] . '</td>';
+            echo '<td>' . $data_by_day[7]['wavePeriod'] . '</td>';
+            echo '<td>' . $data_by_day[7]['windDirection'] . '</td>';
+            echo '<td>' . $data_by_day[7]['windSpeed'] . '</td>';
+            echo '<td>' . $data_by_day[7]['swellDirection'] . '</td>';
+            echo '<td>' . $data_by_day[7]['waterTemperature'] . '</td>';
+            echo '<td>' . $data_by_day[7]['airTemperature'] . '</td>';
         echo '</tr>';
       echo '</table>';
     echo '<h3>Tide</h3>';
@@ -181,7 +262,7 @@ $location = $_GET['location'];
             echo '<td>C7</td>';
             echo '<td>C8</td>';
         echo '</tr>';
-    echo '<table>';
+    echo '</table>';
     ?>
       <nav>
         <a href="#">Favourites</a> |
