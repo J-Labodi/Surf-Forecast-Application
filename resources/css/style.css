@@ -14,7 +14,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
 nav{
@@ -22,18 +21,15 @@ nav{
     position: absolute;
     top: 0;
     left: 0;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
 }
 
 nav .logo{
     width: 400px;
     margin:auto;
     padding-top: 50px;
-    
 }
 
 nav ul li{
@@ -41,11 +37,13 @@ nav ul li{
     display: inline-block;
     margin-left: 40px;
 }
+
 nav ul li a{
     text-decoration: none;
     color: #ffff;
     font-size: 17px;
 }
+
 .content{
     text-align: center;
 }
@@ -94,9 +92,9 @@ color: transparent;
     transform: translateX(-50%);
     height: 100%;
     border-radius: 8px;
-
 }
-video {
+
+video{
     filter: saturate(150%);    
 }
 
@@ -112,7 +110,6 @@ video {
         width: auto;
         height: 100%;
     }
-
 }
 
 .form{
@@ -120,7 +117,6 @@ video {
     color: #F3F3F3;
     font-weight: 600;
     margin-top: 10%;
-
 }
 
 form input[type="text"], form input[type="password"], form textarea {
@@ -134,6 +130,7 @@ a{
     font-weight: 600;
     color:#71F79F;
 }
+
 a:hover{
     cursor: pointer;
 }
@@ -142,11 +139,11 @@ h1 {
     font-size: 40px;
     font-weight: 700;
 }
+
 h4{
     font-weight: 600;
 }
   
-
 #login-hr{
     height: 2px;
     background-color: #71F79F;
@@ -156,6 +153,7 @@ h4{
     margin-right: auto;
     margin-bottom: 30px;
 }
+
 #bottom-hr{
     height: 2px;
     background-color: #F3F3F3;
@@ -164,12 +162,13 @@ h4{
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
-    
 }
+
 h4, #second-hlink{
     display: inline-block;
     vertical-align: middle;
 }
+
 #first-form-element{
     padding: 30px;
 }
@@ -177,9 +176,15 @@ h4, #second-hlink{
 input[type="text"]{
     min-width: 220px;
     min-height: 36px;
-    border-radius: 10px;
-    
+    border-radius: 10px; 
 }
+
+input[type="password"]{
+    min-width: 220px;
+    min-height: 36px;
+    border-radius: 10px; 
+}
+
 input[type=submit]{
     margin-top: 50px;
     margin-bottom: 60px;
@@ -193,12 +198,15 @@ input[type=submit]{
     outline: 2px solid #71F79F;
 }
 
-
 form input[type="text"]:focus {
     outline: 2px solid #71F79F;
 }
 
-label {
+form input[type="password"]:focus {
+    outline: 2px solid #71F79F;
+}
+
+label{
     display: block;
     position: relative;
     top: 18px;
@@ -211,4 +219,3 @@ label {
     top: 2px;
     left: 40px;
 }
-  

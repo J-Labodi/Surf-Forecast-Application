@@ -1,28 +1,25 @@
 <?php
-session_start();
-// include config data
-include('config.php'); 
-$t_unix = time();
+// TODO CHANGE MONGO DB TIMEZONE AS IT SHOWS 1 HOUR LESS SO TS VALIDATION NOT WORKINg
 
-// check the latest timestamp from database
+// obtain the timestamp of the latest API pull from database
 $collection = $client->forecast->current_conditions;
 $document = $collection->findOne(['ts' => ['$exists' => true]]);
-$ts = $document->ts;
-$db_ts = strtotime($ts);
+$db_ts = strtotime($document->ts);
 
-// execute script if time difference greater than 60min
-$time_diff = $t_unix - $db_ts;
+// execute remaining script if time difference greater than 60min
+$t = time();
+$time_diff = $t - $db_ts;
 if ($time_diff <= 3600 ){
-    exit();
+    return;
 }
 
 function callAPI($lat, $lng){
-    global $t_unix;
+    global $t;
     $curl = curl_init();
 
     // details of API request
     curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://api.stormglass.io/v2/weather/point?lat={$lat}&lng={$lng}&params=waveHeight,wavePeriod,windDirection,windSpeed&source=sg&start={$t_unix}&end={$t_unix}",
+    CURLOPT_URL => "https://api.stormglass.io/v2/weather/point?lat={$lat}&lng={$lng}&params=waveHeight,wavePeriod,windDirection,windSpeed&source=sg&start={$t}&end={$t}",
     CURLOPT_HTTPHEADER => array(
         "Content-Type: text/plain",
         "Authorization: 7a94e4d4-c681-11ed-bce5-0242ac130002-7a94e56a-c681-11ed-bce5-0242ac130002"
@@ -38,11 +35,14 @@ function callAPI($lat, $lng){
 
     $result = curl_exec($curl);
     curl_close($curl);
-    return $result;
 
+    return $result;
 }
 
-// PULL locations from DB
+/* TODO refactor the code below to be more flexible,
+that can take more than 3 locations without hardcoding the calls */
+
+// Obtain locations from DB
 $collection = $client->forecast->locations;
 $result = $collection->findOne([]);
 
@@ -63,7 +63,7 @@ $lng3 = $location3->lng;
 
 /* FIRST CALL
 -----------------------------------------------------------*/
-$data = callApi($lat1, $lng1);
+$data = callAPI($lat1, $lng1);
 $obj = json_decode($data); // convert JSON String to PHP Object
 
 $time = $obj->hours[0]->time;
@@ -160,6 +160,5 @@ $update = array(
 $options = array('upsert' => true); // Use upsert option to insert a new document if it doesn't exist
 
 $updateResult = $collection->updateOne($filter, $update, $options);
-
 
 ?>

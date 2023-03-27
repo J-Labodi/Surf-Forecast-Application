@@ -1,18 +1,37 @@
 <?php
-$t_unix = time();
 
+// obtain selected location
 $location = $_GET['location'];
 
-$t_plus_eightdays = $t_unix + 691200;
+// obtain data from db
+$collection = $client->forecast->forecasted_conditions;
+$cursor = $collection->find();
 
-/* TODO logic to check if I have to execute this code
-1 hr or 4 hr??
-*/
+// find document of current location
+foreach ($cursor as $document) {
+    if($document->name == $location){
+        $data = $document;
+    }
+}
+
+// obtain the timestamp of the latest API pull from database
+$db_ts = ($data['ts']);
+
+// execute remaining script if time difference greater than 60min
+$t = time();
+$time_diff = $t - $db_ts;
+if ($time_diff <= 3600 ){
+    return;
+}
 
 
-// PULL lat and lng from DB
-// PULL lat and lng from DB
-// PULL lat and lng from DB
+
+/* current time and time + 8 days for the API call to 
+request data starting today 00:00:00, covering 8 days timeframe */
+$t = time();
+$t_plus_eight_days = $t + 691200;
+
+// obtain lat and lng from db
 $collection = $client->forecast->locations;
 $result = $collection->findOne(['locations.name' => $location]);
 foreach ($result->locations as $loc) {
@@ -23,15 +42,13 @@ foreach ($result->locations as $loc) {
     }
 }
 
-
 function callAPI($lat, $lng){
-    global $t_unix;
-    global $t_plus_eightdays;
+    global $t_plus_eight_days;
     $curl = curl_init();
 
     // details of API request
     curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://api.stormglass.io/v2/weather/point?lat={$lat}&lng={$lng}&params=waveHeight,wavePeriod,windDirection,windSpeed,swellDirection,waterTemperature,airTemperature&source=sg&end={$t_plus_eightdays}",
+    CURLOPT_URL => "https://api.stormglass.io/v2/weather/point?lat={$lat}&lng={$lng}&params=waveHeight,wavePeriod,windDirection,windSpeed,swellDirection,waterTemperature,airTemperature&source=sg&end={$t_plus_eight_days}",
     CURLOPT_HTTPHEADER => array(
         "Content-Type: text/plain",
         "Authorization: 7a94e4d4-c681-11ed-bce5-0242ac130002-7a94e56a-c681-11ed-bce5-0242ac130002"
@@ -47,19 +64,20 @@ function callAPI($lat, $lng){
 
     $result = curl_exec($curl);
     curl_close($curl);
-    return $result;
 
+    return $result;
 }
 
+// call API with the selected locations lat and lng
 $data = callApi($lat, $lng);
-$obj = json_decode($data); // convert JSON String to PHP Object
-// -----------------------------------------------------------------
+// convert JSON String to PHP Object
+$obj = json_decode($data); 
 
-// Trim the redundant data 
+// Trim redundant data from the API response
 $count = 0;
 $array = array();
 
-// keep records of every 3 hours
+// loop through records and keep data of every 3 hours
 foreach ($obj->hours as $record){
     if($count % 3 == 0){
         if($count == 0){
@@ -67,30 +85,30 @@ foreach ($obj->hours as $record){
         }
         array_push($array, $record);
     }
-    /* break loop if today + 7 whole days pushed 
-    One day has 24 records for every hour - 8 x 24 = 192 minus 1 as 
-    last day's midnight record is redundant
-    */
+    /* break loop if today + 7 whole days pushed into array,
+    one day has 24 records for every hour ->> 8 x 24 = 192 
+    minus 1 as last day's midnight record is redundant */
     if($count == 191){
         break;
     } 
     $count ++;
 }
 
+// insert data into db
 
-// Insert into DB
 $collection = $client->forecast->forecasted_conditions;
-$filter = array('name' => $location); // Specify a filter to find the document to update
+// specify a filter to find the document to update
+$filter = array('name' => $location); 
+
 $timestamp = time();
 
-// Create an array of data to update or insert
+// create an array of data to update or insert
 $data = array(
     'ts' => $timestamp,
     'conditions' => array()
 );
 
-
-// Loop through the array and add each object to the conditions array
+// loop through the array and add each object to the conditions array
 foreach ($array as $key => $value) {
     if (is_object($value)) {
         $condition = array(
@@ -107,18 +125,14 @@ foreach ($array as $key => $value) {
     }
 }
 
-// Specify the update operation
+// specify the update operation
 $update = array(
     '$set' => $data
 );
 
-
-$options = array('upsert' => true); // Use upsert option to insert a new document if it doesn't exist
+// use upsert option to insert a new document if it doesn't exist
+$options = array('upsert' => true); 
 
 $updateResult = $collection->updateOne($filter, $update, $options);
-
-
-
-
 
 ?>

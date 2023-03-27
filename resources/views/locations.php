@@ -1,15 +1,12 @@
 <?php
 session_start();
-// include config data
-include('config.php');
 
+include('config.php');
+include('update_current_cond.php');
+
+// obtain data from db
 $collection = $client->forecast->current_conditions;
 $cursor = $collection->find();
-
-
-
-
-
 
 ?>
 <!DOCTYPE html>

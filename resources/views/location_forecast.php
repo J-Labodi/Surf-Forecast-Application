@@ -1,25 +1,32 @@
 <?php
 session_start();
-// include config data
+
 include('config.php');
 include('update_forecasted_cond.php');
+
 $location = $_GET['location'];
 
 
+// obtain data from db
 $collection = $client->forecast->forecasted_conditions;
 $cursor = $collection->find();
 
-// look for correct location's document
+// find document of current location
 foreach ($cursor as $document) {
     if($document->name == $location){
         $data = $document;
     }
 }
 
-
-// function to be called loadup and async 
+// function to obtain appropriate data for the selected day from db
 function getDataByDay($day){
-    // set range to obtain data from database
+    /* set range to obtain data from database: 
+    every day has 7 records, covering forecast data for every 3 hours 
+    a day, switch used to set range for the following loop that 
+    obtain data from db, x an y variables define range for the 
+    loop's counter and this determines what data is obtained 
+    from db, based on the selected day
+    */
     switch ($day) {
         case "today":
             $x = 0;
@@ -55,19 +62,20 @@ function getDataByDay($day){
           break;
     }
 
-    // obtain data for the day and collect waveheights values
+    // obtain data for the chosen day
     global $data;
     $data_array = array();
     $wave_height_array = array();
     $counter = 0;
     foreach($data->conditions as $obj){
         $counter++;
+        /* push only that data that is iterated 
+        within the pre-defined range, x and y vars*/
         if ($counter >= $x && $counter <= $y) {
-            //print_r($obj);
-            //echo '<hr>';
-            // push into array
             array_push($data_array, $obj);
             foreach($obj as $k => $v){
+                /* obtain wave height values for the day and
+                push them to the appropriate array */
                 if ($k == 'waveHeight'){
                     array_push($wave_height_array, $v);
                 }
@@ -75,18 +83,21 @@ function getDataByDay($day){
         }
     }
 
-    // calculate avg of waveheights
+    // calculate average of wave heights for the day
     $a = array_filter($wave_height_array);
     $average = array_sum($a)/count($a);
 
+    /* return average wave height and 
+    the selected day's forecast data */
     return array($average, $data_array);
 }
 
+/* call function to obtain today's forecast data 
+and avergae wave height on load */
 $data_from_function = getDataByDay("today");
 
 $avg_wave_height = $data_from_function[0];
 $data_by_day = $data_from_function[1];
-
 
 ?>
 <!DOCTYPE html>
