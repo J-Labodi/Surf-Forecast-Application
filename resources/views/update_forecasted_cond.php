@@ -20,11 +20,11 @@ $db_ts = ($data['ts']);
 // execute remaining script if time difference greater than 60min
 $t = time();
 $time_diff = $t - $db_ts;
-if ($time_diff <= 3600 ){
+
+// TODO change this back to 3600
+if ($time_diff <= 3600){
     return;
 }
-
-
 
 /* current time and time + 8 days for the API call to 
 request data starting today 00:00:00, covering 8 days timeframe */
@@ -68,8 +68,64 @@ function callAPI($lat, $lng){
     return $result;
 }
 
+function callAPI_Tide($lat, $lng){
+    global $t_plus_eight_days;
+    $curl = curl_init();
+
+    // details of API request
+    curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://api.stormglass.io/v2/tide/extremes/point?lat={$lat}&lng={$lng}&datum=MLLW&end={$t_plus_eight_days}",
+    CURLOPT_HTTPHEADER => array(
+        "Content-Type: text/plain",
+        "Authorization: 7a94e4d4-c681-11ed-bce5-0242ac130002-7a94e56a-c681-11ed-bce5-0242ac130002"
+    ),
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET"
+    ));
+
+    $result_tide = curl_exec($curl);
+    curl_close($curl);
+
+    return $result_tide;
+}
+
+function callAPI_Astro($lat, $lng){
+    global $t_plus_eight_days;
+    $curl = curl_init();
+
+    // details of API request
+    curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://api.stormglass.io/v2/astronomy/point?lat={$lat}&lng={$lng}&end={$t_plus_eight_days}",
+    CURLOPT_HTTPHEADER => array(
+        "Content-Type: text/plain",
+        "Authorization: 7a94e4d4-c681-11ed-bce5-0242ac130002-7a94e56a-c681-11ed-bce5-0242ac130002"
+    ),
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET"
+    ));
+
+    $result_astro = curl_exec($curl);
+    curl_close($curl);
+
+    return $result_astro;
+
+}
+
+/* Forecast data
+----------------------------------------------------------*/
+
 // call API with the selected locations lat and lng
-$data = callApi($lat, $lng);
+$data = callAPI($lat, $lng);
 // convert JSON String to PHP Object
 $obj = json_decode($data); 
 
@@ -123,6 +179,89 @@ foreach ($array as $key => $value) {
         );
         $data['conditions'][] = $condition;
     }
+}
+
+// specify the update operation
+$update = array(
+    '$set' => $data
+);
+
+// use upsert option to insert a new document if it doesn't exist
+$options = array('upsert' => true); 
+
+$updateResult = $collection->updateOne($filter, $update, $options);
+
+/* Tide data
+-----------------------------------------------------------*/
+
+// obtain tide data
+$tide_data = callAPI_Tide($lat, $lng);
+$tide_obj = json_decode($tide_data);
+
+// select the database and collection
+$collection = $client->forecast->forecasted_tide;
+
+// specify a filter to find the document to update
+$filter = array('name' => $location); 
+
+$timestamp = time();
+// create an array of data to update or insert
+$data = array(
+    'ts' => $timestamp,
+    'conditions' => array()
+);
+
+foreach ($tide_obj->data as $key => $value) {
+
+    $condition = array(
+        'height' => $value->height,
+        'time' => $value->time,
+        'type' => $value->type,
+    );
+    $data['conditions'][] = $condition;
+
+}
+
+// specify the update operation
+$update = array(
+    '$set' => $data
+);
+
+// use upsert option to insert a new document if it doesn't exist
+$options = array('upsert' => true); 
+
+$updateResult = $collection->updateOne($filter, $update, $options);
+
+/* Astro data
+--------------------------------------------------------------*/
+
+// obtain astro data
+$astro_data = callAPI_Astro($lat, $lng);
+$astro_obj = json_decode($astro_data);
+
+// select the database and collection
+$collection = $client->forecast->forecasted_astro_data;
+
+// specify a filter to find the document to update
+$filter = array('name' => $location); 
+
+$timestamp = time();
+// create an array of data to update or insert
+$data = array(
+    'ts' => $timestamp,
+    'conditions' => array()
+);
+
+foreach ($astro_obj->data as $key => $value) {
+
+    $condition = array(
+        'firstLight' => $value->astronomicalDawn,
+        'sunrise' => $value->sunrise,
+        'sunset' => $value->sunset,
+        'lastLight' => $value->astronomicalDusk,
+    );
+    $data['conditions'][] = $condition;
+
 }
 
 // specify the update operation

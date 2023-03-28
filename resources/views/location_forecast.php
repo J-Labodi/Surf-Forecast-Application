@@ -6,7 +6,6 @@ include('update_forecasted_cond.php');
 
 $location = $_GET['location'];
 
-
 // obtain data from db
 $collection = $client->forecast->forecasted_conditions;
 $cursor = $collection->find();
@@ -17,6 +16,34 @@ foreach ($cursor as $document) {
         $data = $document;
     }
 }
+
+function getWaveHeightData(){
+    // obtain data for the chosen day
+    global $data;
+    $wave_height_array = array();
+    $row = array();
+    $counter = 0;
+
+    foreach($data->conditions as $obj){
+        $counter++;
+        foreach($obj as $k => $v){
+            /* obtain wave height values for the day and
+            push them to the appropriate array */
+            if ($k == 'waveHeight'){
+                array_push($row, $v);
+            }
+        }
+        if ($counter % 8 == 0) {
+            array_push($wave_height_array, $row);
+            $row = array();
+        }
+    }
+    if (!empty($row)) {
+        array_push($wave_height_array, $row);
+    }
+    return $wave_height_array;
+}
+
 
 // function to obtain appropriate data for the selected day from db
 function getDataByDay($day){
@@ -65,7 +92,6 @@ function getDataByDay($day){
     // obtain data for the chosen day
     global $data;
     $data_array = array();
-    $wave_height_array = array();
     $counter = 0;
     foreach($data->conditions as $obj){
         $counter++;
@@ -73,33 +99,73 @@ function getDataByDay($day){
         within the pre-defined range, x and y vars*/
         if ($counter >= $x && $counter <= $y) {
             array_push($data_array, $obj);
-            foreach($obj as $k => $v){
-                /* obtain wave height values for the day and
-                push them to the appropriate array */
-                if ($k == 'waveHeight'){
-                    array_push($wave_height_array, $v);
-                }
-            }
         }
     }
-
-    // calculate average of wave heights for the day
-    $a = array_filter($wave_height_array);
-    $average = array_sum($a)/count($a);
-
-    /* return average wave height and 
-    the selected day's forecast data */
-    return array($average, $data_array);
+    /* return the selected day's forecast data */
+    return $data_array;
 }
 
-/* call function to obtain today's forecast data 
-and avergae wave height on load */
-$data_from_function = getDataByDay("today");
+function getTideData($day){
 
-$avg_wave_height = $data_from_function[0];
-$data_by_day = $data_from_function[1];
+}
+
+
+
+function getAstroData($day){
+
+    switch ($day) {
+        case "today":
+            $x = 0;
+          break;
+        case "today+1":
+            $x = 1;
+          break;
+        case "today+2":
+            $x = 2;
+          break;
+        case "today+3":
+            $x = 3;
+          break;
+        case "today+4":
+            $x = 4;
+          break;
+        case "today+5":
+            $x = 5;
+          break;
+        case "today+6":
+            $x = 6;
+          break;
+        case "today+7":
+            $x = 7;
+          break;
+    }
+
+
+
+
+
+
+
+}
+
+
+
+// call function to obtain wave heights data on load 
+$wave_heights = getWaveHeightData();
+// call function to obtain today's forecast data on load 
+$data_by_day = getDataByDay("today");
+
+// calculate avg waveheight per day 
+$avg_wave_height_per_day = array();
+foreach($wave_heights as $row){
+    $a = array_filter($row);
+    $average = array_sum($a)/count($a);
+    array_push($avg_wave_height_per_day, $average);
+}
+
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,14 +196,14 @@ $data_by_day = $data_from_function[1];
     echo '</tr>';
     echo '<tr>';
     // med wave height
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
-        echo '<td>X ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[0]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[1]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[2]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[3]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[4]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[5]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[6]  . 'ft</td>';
+        echo '<td>' . $avg_wave_height_per_day[7]  . 'ft</td>';
     echo '</tr>';
     echo '</table>';
     echo '<h3>Overview</h3>';
@@ -235,6 +301,7 @@ $data_by_day = $data_from_function[1];
       echo '</table>';
     echo '<h3>Tide</h3>';
     echo '<table>';
+    // TODO Tide table has to be generated depending on content
         echo '<tr>';
             echo '<td>C1</td>';
             echo '<td>C2</td>';
@@ -255,6 +322,9 @@ $data_by_day = $data_from_function[1];
             echo '<td>C7</td>';
             echo '<td>C8</td>';
         echo '</tr>';
+    echo '</table>';
+    // Astro table
+    echo '<table>';
         echo '<tr>';
             echo '<td>C1</td>';
             echo '<td>C2</td>';
