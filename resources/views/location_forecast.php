@@ -6,20 +6,21 @@ include('update_forecasted_cond.php');
 
 $location = $_GET['location'];
 
-// obtain data from db
-$collection = $client->forecast->forecasted_conditions;
-$cursor = $collection->find();
-
-// find document of current location
-foreach ($cursor as $document) {
-    if($document->name == $location){
-        $data = $document;
-    }
-}
-
 function getWaveHeightData(){
-    // obtain data for the chosen day
-    global $data;
+    global $location;
+    global $client;
+
+    // obtain data from db
+    $collection = $client->forecast->forecasted_conditions;
+    $cursor = $collection->find();
+
+    // find document of current location
+    foreach ($cursor as $document) {
+        if($document->name == $location){
+            $data = $document;
+        }
+    }
+
     $wave_height_array = array();
     $row = array();
     $counter = 0;
@@ -47,6 +48,9 @@ function getWaveHeightData(){
 
 // function to obtain appropriate data for the selected day from db
 function getDataByDay($day){
+    global $location;
+    global $client;
+
     /* set range to obtain data from database: 
     every day has 7 records, covering forecast data for every 3 hours 
     a day, switch used to set range for the following loop that 
@@ -89,8 +93,17 @@ function getDataByDay($day){
           break;
     }
 
-    // obtain data for the chosen day
-    global $data;
+    // obtain data from db
+    $collection = $client->forecast->forecasted_conditions;
+    $cursor = $collection->find();
+
+    // find document of current location
+    foreach ($cursor as $document) {
+        if($document->name == $location){
+            $data = $document;
+        }
+    }
+
     $data_array = array();
     $counter = 0;
     foreach($data->conditions as $obj){
@@ -106,12 +119,85 @@ function getDataByDay($day){
 }
 
 function getTideData($day){
+    global $location;
+    global $client;
+    $timestamp = NULL;
+
+    switch ($day) {
+        case "today":
+            $timestamp = time();
+          break;
+        case "today+1":
+            $timestamp = strtotime('+1 day', $timestamp);
+          break;
+        case "today+2":
+            $timestamp = strtotime('+2 day', $timestamp);
+          break;
+        case "today+3":
+            $timestamp = strtotime('+3 day', $timestamp);
+          break;
+        case "today+4":
+            $timestamp = strtotime('+4 day', $timestamp);
+          break;
+        case "today+5":
+            $timestamp = strtotime('+5 day', $timestamp);
+          break;
+        case "today+6":
+            $timestamp = strtotime('+6 day', $timestamp);
+          break;
+        case "today+7":
+            $timestamp = strtotime('+7 day', $timestamp);
+          break;
+    }
+    // convert timestamp to keep it in this format: 2022-03-28
+    $date = new DateTime("@$timestamp"); // create new DateTime object from Unix timestamp
+    $formatted_date = $date->format('Y-m-d'); // format the date in the desired format
+    
+
+    // obtain data from db
+    $collection = $client->forecast->forecasted_tide;
+    $cursor = $collection->find();
+
+    // find document of current location
+    foreach ($cursor as $document) {
+        if($document->name == $location){
+            $data = $document;
+        }
+    }
+
+    /* returning the tide data from the db and the 
+    formatted date of the chosen day */
+    return array($data, $formatted_date);
 
 }
 
 
+$test = getTideData("today+7");
+$formatted_d_for_comp = $test[1];
+
+
+$cond = $test[0]['conditions'];
+$tide_data_of_day = [];
+
+foreach($cond as $record){
+    $utc = $record['time'];
+    $d = new DateTime($utc);
+    $formatted_d = $d->format('Y-m-d');
+
+    if($formatted_d == $formatted_d_for_comp){
+        $tide_data_of_day[] = $record;
+    }
+}
+echo '<pre>';
+print_r($tide_data_of_day);
+echo '</pre>';
+
+return;
+
 
 function getAstroData($day){
+    global $location;
+    global $client;
 
     switch ($day) {
         case "today":
@@ -140,12 +226,21 @@ function getAstroData($day){
           break;
     }
 
+    // obtain data from db
+    $collection = $client->forecast->forecasted_astro_data;
+    $cursor = $collection->find();
 
+    // find document of current location
+    foreach ($cursor as $document) {
+        if($document->name == $location){
+            $data = $document;
+        }
+    }
 
+    $conditions = $data->conditions; 
+    $a_data = $conditions[$x];
 
-
-
-
+    return $a_data;
 }
 
 
@@ -163,6 +258,8 @@ foreach($wave_heights as $row){
     array_push($avg_wave_height_per_day, $average);
 }
 
+// call function to obtain today's astro data
+$astro_data = getAstroData("today");
 
 ?>
 
@@ -302,48 +399,34 @@ foreach($wave_heights as $row){
     echo '<h3>Tide</h3>';
     echo '<table>';
     // TODO Tide table has to be generated depending on content
+
+    for ($i = 0; $i < 4; $i++) {
         echo '<tr>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
-            echo '<td>C8</td>';
+        echo '<td>C1</td>';
+        echo '<td>C2</td>';
+        echo '<td>C3</td>';
+        echo '<td>C4</td>';
         echo '</tr>';
-        echo '<tr>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
-            echo '<td>C8</td>';
-        echo '</tr>';
+    }
+
     echo '</table>';
     // Astro table
     echo '<table>';
         echo '<tr>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
-            echo '<td>C8</td>';
+            echo '<td>First Light</td>';
+            echo '<td>' . $astro_data['firstLight'] . '</td>';
         echo '</tr>';
         echo '<tr>';
-            echo '<td>C1</td>';
-            echo '<td>C2</td>';
-            echo '<td>C3</td>';
-            echo '<td>C4</td>';
-            echo '<td>C5</td>';
-            echo '<td>C6</td>';
-            echo '<td>C7</td>';
-            echo '<td>C8</td>';
+            echo '<td>Sunrise</td>';
+            echo '<td>' . $astro_data['sunrise'] . '</td>';
+        echo '</tr>';
+        echo '<tr>';
+            echo '<td>Sunset</td>';
+            echo '<td>' . $astro_data['sunset'] . '</td>';
+        echo '</tr>';
+        echo '<tr>';
+            echo '<td>Last Light</td>';
+            echo '<td>' . $astro_data['lastLight'] . '</td>';
         echo '</tr>';
     echo '</table>';
     ?>
