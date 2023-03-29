@@ -5,15 +5,6 @@
     font-family: 'Mulish', sans-serif;
 }
 
-body{
-    background-color: rgb(91, 143, 255);
-}
-
-nav a{
-    text-decoration: none;
-    color: #ffff;
-    font-size: 17px;
-}
 table td {
     border: solid black;
 }

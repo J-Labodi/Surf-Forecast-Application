@@ -220,18 +220,55 @@ function getAstroData($day){
     return $a_data;
 }
 
-function mToFt($val){
-    $val_in_feet = $val * 3.2808399;
-    $rounded = round($val_in_feet, 2);
-    return $rounded;
-}
+// function to convert MS to MPH values
 function msToMph($val){
     $val_in_ms = $val * 2.23694;
     $rounded = round($val_in_ms);
     return $rounded;
 }
 
+// function to convert Meter to Feet 
+function mToFt($val){
+    $val_in_feet = $val * 3.2808399;
+    $rounded = round($val_in_feet, 2);
+    return $rounded;
+}
 
+/* function to convert wave height value to represent 
+wave height as a range if required 
+note: function takes only double value with two decimal value,
+such as: 2.34
+*/
+function convertFtValue($val){
+    // base value as double - declaring floor and ceil values
+    $base_as_double = $val;
+    $base_floor = floor($base_as_double);
+    $base_ceil = ceil($base_as_double);
+
+    // get base value and convert it to string
+    $val_in_str = strval($base_as_double);
+
+    // obtain decimal number only, after the . chr
+    $decimal_val = explode(".", $val_in_str);
+    $after_dot = $decimal_val[1];
+    // convert it back to int to complete comparison in selection
+    $after_dot_int = intval($after_dot); 
+
+    // if decimal less than 33, use floor value
+    if ($after_dot_int <= 33){
+        $result = $base_floor;
+
+    // if decimal greater than 66, use floor value
+    } elseif($after_dot_int >= 66){
+        $result = $base_ceil;
+    
+    /* if decimal number is in the mid range: 33 <= dec number <= 66 
+    display both floor and ceil value, divided by dash */
+    } else{
+        $result = $base_floor . "-" . $base_ceil;
+    }
+    return $result;
+}
 
 // call function to obtain wave heights data on load 
 $wave_heights = getWaveHeightData();
@@ -304,14 +341,14 @@ foreach($cond as $record){
     echo '</tr>';
     echo '<tr>';
     // med wave height
-        echo '<td>' . mToFt($avg_wave_height_per_day[0])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[1])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[2])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[3])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[4])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[5])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[6])  . 'ft</td>';
-        echo '<td>' . mToFt($avg_wave_height_per_day[7])  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[0]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[1]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[2]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[3]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[4]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[5]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[6]))  . 'ft</td>';
+        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
     echo '</tr>';
     echo '</table>';
     echo '<h3>Overview</h3>';
@@ -328,8 +365,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">12am</td>';
-            echo '<td>' . mToFt($data_by_day[0]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[0]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[0]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[0]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[0]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[0]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[0]['swellDirection'] . '</td>';
@@ -338,8 +375,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3am</td>';
-            echo '<td>' . mToFt($data_by_day[1]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[1]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[1]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[1]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[1]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[1]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[1]['swellDirection'] . '</td>';
@@ -348,8 +385,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6am</td>';
-            echo '<td>' . mToFt($data_by_day[2]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[2]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[2]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[2]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[2]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[2]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[2]['swellDirection'] . '</td>';
@@ -358,8 +395,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9am</td>';
-            echo '<td>' . mToFt($data_by_day[3]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[3]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[3]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[3]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[3]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[3]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[3]['swellDirection'] . '</td>';
@@ -368,8 +405,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">Noon</td>';
-            echo '<td>' . mToFt($data_by_day[4]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[4]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[4]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[4]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[4]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[4]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[4]['swellDirection'] . '</td>';
@@ -378,8 +415,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3pm</td>';
-            echo '<td>' . mToFt($data_by_day[5]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[5]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[5]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[5]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[5]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[5]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[5]['swellDirection'] . '</td>';
@@ -388,8 +425,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6pm</td>';
-            echo '<td>' . mToFt($data_by_day[6]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[6]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[6]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[6]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[6]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[6]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[6]['swellDirection'] . '</td>';
@@ -398,8 +435,8 @@ foreach($cond as $record){
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9pm</td>';
-            echo '<td>' . mToFt($data_by_day[7]['waveHeight']) . 'ft</td>';
-            echo '<td>' . $data_by_day[7]['wavePeriod'] . 's</td>';
+            echo '<td>' . convertFtValue(mToFt($data_by_day[7]['waveHeight'])) . 'ft</td>';
+            echo '<td>' . round($data_by_day[7]['wavePeriod']) . 's</td>';
             echo '<td>' . $data_by_day[7]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[7]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[7]['swellDirection'] . '</td>';
