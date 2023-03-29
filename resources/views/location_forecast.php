@@ -46,6 +46,7 @@ function getWaveHeightData(){
 }
 
 
+
 // function to obtain appropriate data for the selected day from db
 function getDataByDay($day){
     global $location;
@@ -330,25 +331,25 @@ foreach($cond as $record){
     echo '<h2>' . $location . '</h2>';
     echo '<table>';
     echo '<tr>';
-        echo '<th>' . $today . '</th>';
-        echo '<th>' . $today_plus_1 . '</th>';
-        echo '<th>' . $today_plus_2 . '</th>';
-        echo '<th>' . $today_plus_3 . '</th>';
-        echo '<th>' . $today_plus_4 . '</th>';
-        echo '<th>' . $today_plus_5 . '</th>';
-        echo '<th>' . $today_plus_6 . '</th>';
-        echo '<th>' . $today_plus_7 . '</th>';
+        echo '<th id="today">' . $today . '</th>';
+        echo '<th id="today+1">' . $today_plus_1 . '</th>';
+        echo '<th id="today+2">' . $today_plus_2 . '</th>';
+        echo '<th id="today+3">' . $today_plus_3 . '</th>';
+        echo '<th id="today+4">' . $today_plus_4 . '</th>';
+        echo '<th id="today+5">' . $today_plus_5 . '</th>';
+        echo '<th id="today+6">' . $today_plus_6 . '</th>';
+        echo '<th id="today+7">' . $today_plus_7 . '</th>';
     echo '</tr>';
     echo '<tr>';
     // med wave height
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[0]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[1]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[2]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[3]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[4]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[5]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[6]))  . 'ft</td>';
-        echo '<td>' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
+        echo '<td id="today">' . convertFtValue(mToFt($avg_wave_height_per_day[0]))  . 'ft</td>';
+        echo '<td id="today+1">' . convertFtValue(mToFt($avg_wave_height_per_day[1]))  . 'ft</td>';
+        echo '<td id="today+2">' . convertFtValue(mToFt($avg_wave_height_per_day[2]))  . 'ft</td>';
+        echo '<td id="today+3">' . convertFtValue(mToFt($avg_wave_height_per_day[3]))  . 'ft</td>';
+        echo '<td id="today+4">' . convertFtValue(mToFt($avg_wave_height_per_day[4]))  . 'ft</td>';
+        echo '<td id="today+5">' . convertFtValue(mToFt($avg_wave_height_per_day[5]))  . 'ft</td>';
+        echo '<td id="today+6">' . convertFtValue(mToFt($avg_wave_height_per_day[6]))  . 'ft</td>';
+        echo '<td id="today+7">' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
     echo '</tr>';
     echo '</table>';
     echo '<h3>Overview</h3>';
