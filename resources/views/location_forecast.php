@@ -151,7 +151,7 @@ function getTideData($day){
     }
     // convert timestamp to keep it in this format: 2022-03-28
     $date = new DateTime("@$timestamp"); // create new DateTime object from Unix timestamp
-    $formatted_date = $date->format('Y-m-d'); // format the date in the desired format
+    $date_of_recordate = $date->format('Y-m-d'); // format the date in the desired format
     
 
     // obtain data from db
@@ -167,32 +167,9 @@ function getTideData($day){
 
     /* returning the tide data from the db and the 
     formatted date of the chosen day */
-    return array($data, $formatted_date);
+    return array($data, $date_of_recordate);
 
 }
-
-
-$test = getTideData("today+7");
-$formatted_d_for_comp = $test[1];
-
-
-$cond = $test[0]['conditions'];
-$tide_data_of_day = [];
-
-foreach($cond as $record){
-    $utc = $record['time'];
-    $d = new DateTime($utc);
-    $formatted_d = $d->format('Y-m-d');
-
-    if($formatted_d == $formatted_d_for_comp){
-        $tide_data_of_day[] = $record;
-    }
-}
-echo '<pre>';
-print_r($tide_data_of_day);
-echo '</pre>';
-
-return;
 
 
 function getAstroData($day){
@@ -260,6 +237,34 @@ foreach($wave_heights as $row){
 
 // call function to obtain today's astro data
 $astro_data = getAstroData("today");
+
+/* call function to obtain today's tide data
+obtaining tide info and the requestedday formatted as: 
+2022-03-28 for comparison */
+$data_from_tide_function = getTideData("today+7");
+$date_from_tide_function = $data_from_tide_function[1];
+
+// acessing conditions - array to collect today's tide data
+$cond = $data_from_tide_function[0]['conditions'];
+$tide_data_of_day = [];
+
+/* loop to iterate through tide data,
+if date of record is eaual to today's formatted date, 
+push it to today's tide data array */
+foreach($cond as $record){
+    $utc = $record['time'];
+    $d = new DateTime($utc);
+    $date_of_record = $d->format('Y-m-d');
+
+    if($date_of_record == $date_from_tide_function){
+        $tide_data_of_day[] = $record;
+    }
+}
+
+$no_of_tide_records =  count($tide_data_of_day);
+echo '<pre>';
+print_r($tide_data_of_day);
+echo '</pre>';
 
 ?>
 
@@ -398,17 +403,13 @@ $astro_data = getAstroData("today");
       echo '</table>';
     echo '<h3>Tide</h3>';
     echo '<table>';
-    // TODO Tide table has to be generated depending on content
-
-    for ($i = 0; $i < 4; $i++) {
+    foreach ($tide_data_of_day as $rec) {
         echo '<tr>';
-        echo '<td>C1</td>';
-        echo '<td>C2</td>';
-        echo '<td>C3</td>';
-        echo '<td>C4</td>';
+        echo '<td>' . $rec['type'] . '</td>';
+        echo '<td>' . $rec['time'] . '</td>';
+        echo '<td>' . $rec['height'] . '</td>';
         echo '</tr>';
     }
-
     echo '</table>';
     // Astro table
     echo '<table>';
