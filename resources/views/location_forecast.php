@@ -6,6 +6,12 @@ include('update_forecasted_cond.php');
 
 $location = $_GET['location'];
 
+if(isset($_GET['day'])){
+    $day = str_replace(" ", "+", $_GET['day']);
+}else{
+    $day = 'today';
+}
+
 function getWaveHeightData(){
     global $location;
     global $client;
@@ -274,7 +280,7 @@ function convertFtValue($val){
 // call function to obtain wave heights data on load 
 $wave_heights = getWaveHeightData();
 // call function to obtain today's forecast data on load 
-$data_by_day = getDataByDay("today");
+$data_by_day = getDataByDay($day);
 
 // calculate avg waveheight per day 
 $avg_wave_height_per_day = array();
@@ -285,12 +291,12 @@ foreach($wave_heights as $row){
 }
 
 // call function to obtain today's astro data
-$astro_data = getAstroData("today");
+$astro_data = getAstroData($day);
 
 /* call function to obtain today's tide data
 obtaining tide info and the requestedday formatted as: 
 2022-03-28 for comparison */
-$data_from_tide_function = getTideData("today");
+$data_from_tide_function = getTideData($day);
 $date_from_tide_function = $data_from_tide_function[1];
 
 // acessing conditions - array to collect today's tide data
@@ -331,14 +337,14 @@ foreach($cond as $record){
     echo '<h2>' . $location . '</h2>';
     echo '<table>';
     echo '<tr>';
-        echo '<th id="today">' . $today . '</th>';
-        echo '<th id="today+1">' . $today_plus_1 . '</th>';
-        echo '<th id="today+2">' . $today_plus_2 . '</th>';
-        echo '<th id="today+3">' . $today_plus_3 . '</th>';
-        echo '<th id="today+4">' . $today_plus_4 . '</th>';
-        echo '<th id="today+5">' . $today_plus_5 . '</th>';
-        echo '<th id="today+6">' . $today_plus_6 . '</th>';
-        echo '<th id="today+7">' . $today_plus_7 . '</th>';
+        echo '<th id="today" onclick="refreshTable(this.id)">' . $today . '</th>';
+        echo '<th id="today+1" onclick="refreshTable(this.id)">' . $today_plus_1 . '</th>';
+        echo '<th id="today+2" onclick="refreshTable(this.id)">' . $today_plus_2 . '</th>';
+        echo '<th id="today+3" onclick="refreshTable(this.id)">' . $today_plus_3 . '</th>';
+        echo '<th id="today+4" onclick="refreshTable(this.id)">' . $today_plus_4 . '</th>';
+        echo '<th id="today+5" onclick="refreshTable(this.id)">' . $today_plus_5 . '</th>';
+        echo '<th id="today+6" onclick="refreshTable(this.id)">' . $today_plus_6 . '</th>';
+        echo '<th id="today+7" onclick="refreshTable(this.id)">' . $today_plus_7 . '</th>';
     echo '</tr>';
     echo '<tr>';
     // med wave height
@@ -482,5 +488,6 @@ foreach($cond as $record){
         <a href="#">Account</a>
       </nav>
       <script src="../js/locations-searchbar.js"></script>
+      <script src="../js/refresh-tables.js"></script>
 </body>
 </html>
