@@ -255,18 +255,26 @@ function convertFtValue($val){
     // get base value and convert it to string
     $val_in_str = strval($base_as_double);
 
-    // obtain decimal number only, after the . chr
-    $decimal_val = explode(".", $val_in_str);
-    $after_dot = $decimal_val[1];
+    /* check if the value is a decimal number, 
+    if true, obtain values after dec point
+    if false, fraction will be equal to 0 */
+    if(str_contains($val_in_str, '.')){
+        // obtain decimal number only, after the . chr
+        $decimal_val = explode(".", $val_in_str);
+        $after_dot = $decimal_val[1];
+    }else{
+        $after_dot = '0';
+    }
+
     // convert it back to int to complete comparison in selection
     $after_dot_int = intval($after_dot); 
 
-    // if decimal less than 33, use floor value
-    if ($after_dot_int <= 33){
+    // if decimal less than 30, use floor value
+    if ($after_dot_int <= 30){
         $result = $base_floor;
 
-    // if decimal greater than 66, use floor value
-    } elseif($after_dot_int >= 66){
+    // if decimal greater than 70, use floor value
+    } elseif($after_dot_int >= 70){
         $result = $base_ceil;
     
     /* if decimal number is in the mid range: 33 <= dec number <= 66 
@@ -377,8 +385,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[0]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[0]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[0]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[0]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[0]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[0]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[0]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3am</td>';
@@ -387,8 +395,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[1]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[1]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[1]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[1]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[1]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[1]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[1]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6am</td>';
@@ -397,8 +405,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[2]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[2]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[2]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[2]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[2]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[2]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[2]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9am</td>';
@@ -407,8 +415,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[3]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[3]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[3]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[3]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[3]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[3]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[3]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">Noon</td>';
@@ -417,8 +425,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[4]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[4]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[4]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[4]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[4]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[4]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[4]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">3pm</td>';
@@ -427,8 +435,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[5]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[5]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[5]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[5]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[5]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[5]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[5]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">6pm</td>';
@@ -437,8 +445,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[6]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[6]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[6]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[6]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[6]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[6]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[6]['airTemperature']) . '&degc</td>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">9pm</td>';
@@ -447,8 +455,8 @@ foreach($cond as $record){
             echo '<td>' . $data_by_day[7]['windDirection'] . '</td>';
             echo '<td>' . msToMph($data_by_day[7]['windSpeed']) . 'mph</td>';
             echo '<td>' . $data_by_day[7]['swellDirection'] . '</td>';
-            echo '<td>' . round($data_by_day[7]['waterTemperature']) . 'c</td>';
-            echo '<td>' . round($data_by_day[7]['airTemperature']) . 'c</td>';
+            echo '<td>' . round($data_by_day[7]['waterTemperature']) . '&degc</td>';
+            echo '<td>' . round($data_by_day[7]['airTemperature']) . '&degc</td>';
         echo '</tr>';
       echo '</table>';
     echo '<h3>Tide</h3>';

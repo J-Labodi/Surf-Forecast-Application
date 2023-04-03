@@ -24,7 +24,7 @@ function refreshTable(day) {
       var currentPath = window.location.pathname.split('/').pop();
   
       // Reload the page with the updated query string
-      window.location.href = currentPath + '?' + newQuery;
+      window.location.href = currentPath + newQuery;
     }
   }
   
