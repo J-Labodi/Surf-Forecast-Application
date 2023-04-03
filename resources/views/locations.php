@@ -3,10 +3,7 @@ session_start();
 
 include('config.php');
 include('update_current_cond.php');
-
-// obtain data from db
-$collection = $client->forecast->current_conditions;
-$cursor = $collection->find();
+include('locations_logic.php');
 
 ?>
 <!DOCTYPE html>
@@ -15,6 +12,7 @@ $cursor = $collection->find();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width", initial-scale="1.0">
   <title>Locations</title>
+  <script src="https://kit.fontawesome.com/6f214ab12c.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style-locations.css">
 </head>
 <body>
@@ -40,16 +38,16 @@ $cursor = $collection->find();
               echo $document->name;
             echo '</td>';
             echo '<td>';            
-              echo $document->waveheight;
+              echo convertFtValue(mToFt($document->waveheight));
+            echo 'ft</td>';
+            echo '<td>';
+              echo round($document->waveperiod);
+            echo 's<td>';
+              echo renderArrowIconWind($document->winddirection);
             echo '</td>';
             echo '<td>';
-              echo $document->waveperiod;
-            echo '<td>';
-              echo $document->winddirection;
-            echo '</td>';
-            echo '<td>';
-              echo $document->windspeed;
-            echo '</td>';
+              echo msToMph($document->windspeed);
+            echo 'mph</td>';
             echo '<td>';
               echo '<a href="#" class="details-link" data-name="' . $document->name . '">>></a>';
             echo '</td>';
