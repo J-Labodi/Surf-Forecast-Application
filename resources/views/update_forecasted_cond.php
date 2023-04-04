@@ -22,7 +22,7 @@ $t = time();
 $time_diff = $t - $db_ts;
 
 // TODO change this back to 3600
-if ($time_diff <= 1){
+if ($time_diff <= 3600){
     return;
 }
 

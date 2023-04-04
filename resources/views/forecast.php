@@ -27,38 +27,38 @@ include('forecast_logic.php');
     echo '<h2>' . $location . '</h2>';
     echo '<table>';
     echo '<tr>';
-        echo '<th id="today" onclick="refreshTable(this.id)">' . $today . '</th>';
-        echo '<th id="today+1" onclick="refreshTable(this.id)">' . $today_plus_1 . '</th>';
-        echo '<th id="today+2" onclick="refreshTable(this.id)">' . $today_plus_2 . '</th>';
-        echo '<th id="today+3" onclick="refreshTable(this.id)">' . $today_plus_3 . '</th>';
-        echo '<th id="today+4" onclick="refreshTable(this.id)">' . $today_plus_4 . '</th>';
-        echo '<th id="today+5" onclick="refreshTable(this.id)">' . $today_plus_5 . '</th>';
-        echo '<th id="today+6" onclick="refreshTable(this.id)">' . $today_plus_6 . '</th>';
-        echo '<th id="today+7" onclick="refreshTable(this.id)">' . $today_plus_7 . '</th>';
+        echo '<th id="day0" class="day-selector" onclick="refreshTable(this.id)">' . $today . '</th>';
+        echo '<th id="day1" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_1 . '</th>';
+        echo '<th id="day2" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_2 . '</th>';
+        echo '<th id="day3" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_3 . '</th>';
+        echo '<th id="day4" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_4 . '</th>';
+        echo '<th id="day5" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_5 . '</th>';
+        echo '<th id="day6" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_6 . '</th>';
+        echo '<th id="day7" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_7 . '</th>';
     echo '</tr>';
     echo '<tr>';
     // med wave height
-        echo '<td id="today">' . convertFtValue(mToFt($avg_wave_height_per_day[0]))  . 'ft</td>';
-        echo '<td id="today+1">' . convertFtValue(mToFt($avg_wave_height_per_day[1]))  . 'ft</td>';
-        echo '<td id="today+2">' . convertFtValue(mToFt($avg_wave_height_per_day[2]))  . 'ft</td>';
-        echo '<td id="today+3">' . convertFtValue(mToFt($avg_wave_height_per_day[3]))  . 'ft</td>';
-        echo '<td id="today+4">' . convertFtValue(mToFt($avg_wave_height_per_day[4]))  . 'ft</td>';
-        echo '<td id="today+5">' . convertFtValue(mToFt($avg_wave_height_per_day[5]))  . 'ft</td>';
-        echo '<td id="today+6">' . convertFtValue(mToFt($avg_wave_height_per_day[6]))  . 'ft</td>';
-        echo '<td id="today+7">' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
+        echo '<td id="day0" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[0]))  . 'ft</td>';
+        echo '<td id="day1" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[1]))  . 'ft</td>';
+        echo '<td id="day2" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[2]))  . 'ft</td>';
+        echo '<td id="day3" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[3]))  . 'ft</td>';
+        echo '<td id="day4" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[4]))  . 'ft</td>';
+        echo '<td id="day5" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[5]))  . 'ft</td>';
+        echo '<td id="day6" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[6]))  . 'ft</td>';
+        echo '<td id="day7" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
     echo '</tr>';
     echo '</table>';
     echo '<h3>Overview</h3>';
       echo '<table>';
         echo '<tr>';
             echo '<th></th>';
-            echo '<th>WAVE HEIGHT</th>';
-            echo '<th>WAVE PERIOD</th>';
-            echo '<th>WIND DIRECT</th>';
-            echo '<th>WIND INTENS</th>';
-            echo '<th>SWELL DIRECT</th>';
-            echo '<th>SEA TEMP</th>';
-            echo '<th>AIR TEMP</th>';
+            echo '<th>WAVE<br>HEIGHT</th>';
+            echo '<th>WAVE<br>PERIOD</th>';
+            echo '<th>WIND<br>DIRECT</th>';
+            echo '<th>WIND<br>INTENS</th>';
+            echo '<th>SWELL<br>DIRECT</th>';
+            echo '<th>SEA<br>TEMP</th>';
+            echo '<th>AIR<br>TEMP</th>';
         echo '</tr>';
         echo '<tr>';
             echo '<td class="rotate">12am</td>';
@@ -154,10 +154,10 @@ include('forecast_logic.php');
         rotate the tide icon accordingly */
         $tide_type = ucfirst($rec['type']);
         if($tide_type == 'High'){
-            $icon_html = '<td><i class="fa-solid fa-caret-up"></i></td>';
+            $icon_html = '<td class="tide-icon"><i id="tide-icon" class="fa-solid fa-caret-up"></i></td>';
         }else{
             $icon_angle = 180;
-            $icon_html = '<td><i class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
+            $icon_html = '<td class="tide-icon"><i id="tide-icon2" class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
         }
 
         echo '<tr>';
@@ -171,19 +171,19 @@ include('forecast_logic.php');
     // Astro table
     echo '<table>';
         echo '<tr>';
-            echo '<td>First Light</td>';
+            echo '<td class="astro-titles">First Light</td>';
             echo '<td>' . substr($astro_data['firstLight'], 11, -9) . '</td>';
         echo '</tr>';
         echo '<tr>';
-            echo '<td>Sunrise</td>';
+            echo '<td class="astro-titles">Sunrise</td>';
             echo '<td>' . substr($astro_data['sunrise'], 11, -9) . '</td>';
         echo '</tr>';
         echo '<tr>';
-            echo '<td>Sunset</td>';
+            echo '<td class="astro-titles">Sunset</td>';
             echo '<td>' . substr($astro_data['sunset'], 11, -9) . '</td>';
         echo '</tr>';
         echo '<tr>';
-            echo '<td>Last Light</td>';
+            echo '<td class="astro-titles">Last Light</td>';
             echo '<td>' . substr($astro_data['lastLight'], 11, -9) . '</td>';
         echo '</tr>';
     echo '</table>';
@@ -196,5 +196,6 @@ include('forecast_logic.php');
       </nav>
       <script src="../js/locations-searchbar.js"></script>
       <script src="../js/refresh-tables.js"></script>
+      <script src="../js/highlight-day.js"></script>
 </body>
 </html>

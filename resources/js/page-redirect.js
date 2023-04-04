@@ -7,6 +7,6 @@ for (var i = 0; i < detailsLinks.length; i++) {
         event.preventDefault();
         var name = this.getAttribute('data-name');
         // Redirect to the details page with the name value as a query parameter
-        window.location.href = 'forecast.php?location=' + name;
+        window.location.href = 'forecast.php?location=' + name + '&day=day0';
     });
 }

@@ -2,9 +2,9 @@
 $location = $_GET['location'];
 
 if(isset($_GET['day'])){
-    $day = str_replace(" ", "+", $_GET['day']);
+    $day = $_GET['day'];
 }else{
-    $day = 'today';
+    $day = 'day0';
 }
 
 function getWaveHeightData(){
@@ -61,35 +61,35 @@ function getDataByDay($day){
     from db, based on the selected day
     */
     switch ($day) {
-        case "today":
+        case "day0":
             $x = 0;
             $y = 8;
           break;
-        case "today+1":
+        case "day1":
             $x = 9;
             $y = 16;
           break;
-        case "today+2":
+        case "day2":
             $x = 17;
             $y = 24;
           break;
-        case "today+3":
+        case "day3":
             $x = 25;
             $y = 32;
           break;
-        case "today+4":
+        case "day4":
             $x = 33;
             $y = 40;
           break;
-        case "today+5":
+        case "day5":
             $x = 41;
             $y = 48;
           break;
-        case "today+6":
+        case "day6":
             $x = 49;
             $y = 56;
           break;
-        case "today+7":
+        case "day7":
             $x = 57;
             $y = 64;
           break;
@@ -126,28 +126,28 @@ function getTideData($day){
     $timestamp = NULL;
 
     switch ($day) {
-        case "today":
+        case "day0":
             $timestamp = time();
           break;
-        case "today+1":
+        case "day1":
             $timestamp = strtotime('+1 day', $timestamp);
           break;
-        case "today+2":
+        case "day2":
             $timestamp = strtotime('+2 day', $timestamp);
           break;
-        case "today+3":
+        case "day3":
             $timestamp = strtotime('+3 day', $timestamp);
           break;
-        case "today+4":
+        case "day4":
             $timestamp = strtotime('+4 day', $timestamp);
           break;
-        case "today+5":
+        case "day5":
             $timestamp = strtotime('+5 day', $timestamp);
           break;
-        case "today+6":
+        case "day6":
             $timestamp = strtotime('+6 day', $timestamp);
           break;
-        case "today+7":
+        case "day7":
             $timestamp = strtotime('+7 day', $timestamp);
           break;
     }
@@ -178,28 +178,28 @@ function getAstroData($day){
     global $client;
 
     switch ($day) {
-        case "today":
+        case "day0":
             $x = 0;
           break;
-        case "today+1":
+        case "day1":
             $x = 1;
           break;
-        case "today+2":
+        case "day2":
             $x = 2;
           break;
-        case "today+3":
+        case "day3":
             $x = 3;
           break;
-        case "today+4":
+        case "day4":
             $x = 4;
           break;
-        case "today+5":
+        case "day5":
             $x = 5;
           break;
-        case "today+6":
+        case "day6":
             $x = 6;
           break;
-        case "today+7":
+        case "day7":
             $x = 7;
           break;
     }
