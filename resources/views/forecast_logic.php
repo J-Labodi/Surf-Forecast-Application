@@ -261,7 +261,7 @@ function renderArrowIconWind($degree){
     $angle = $degree + 135;
 
     // Build the HTML for the arrow icon with Font Awesome
-    $html = '<div class="icon-container"><i class="fa-solid fa-location-arrow fa-lg" style="transform: rotate(' . $angle . 'deg)"></i><p>' . $text . '</p></div>';
+    $html = '<div class="icon-container"><i class="fa-solid fa-location-arrow fa-xl" style="transform: rotate(' . $angle . 'deg)"></i><p>' . $text . '</p></div>';
 
     // Output the HTML for the arrow icon
     return $html;
@@ -273,7 +273,7 @@ function renderArrowIcon($degree){
     $angle = $degree + 135;
 
     // Build the HTML for the arrow icon with Font Awesome
-    $html = '<i class="fa-solid fa-location-arrow fa-lg" style="transform: rotate(' . $angle . 'deg)"></i>';
+    $html = '<i class="fa-solid fa-location-arrow fa-xl" style="transform: rotate(' . $angle . 'deg)"></i>';
 
     // Output the HTML for the arrow icon
     return $html;

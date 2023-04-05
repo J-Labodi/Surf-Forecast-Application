@@ -20,12 +20,18 @@ include('forecast_logic.php');
     <div class="search-bar">
         <form>
             <label for="search">Search</label><br>
-            <input type="text" id="search" name="search">
+            <div class="search-container">
+                <input type="text" id="search" name="search" maxlength="50">
+                <i class="fa-solid fa-magnifying-glass" style="color: #15b097;"></i>
+            </div>
         </form>          
     </div>
     <?php
-    echo '<h2>' . $location . '</h2>';
-    echo '<table>';
+    echo '<div class="location-container">';
+        echo '<h1>' . $location . '</h1>';
+        echo '<i class="fa-solid fa-star fa-lg" style="color: #3dd6d0;"></i>';
+    echo '</div>';
+    echo '<table class="day-menu">';
     echo '<tr>';
         echo '<th id="day0" class="day-selector" onclick="refreshTable(this.id)">' . $today . '</th>';
         echo '<th id="day1" class="day-selector" onclick="refreshTable(this.id)">' . $today_plus_1 . '</th>';
@@ -48,8 +54,8 @@ include('forecast_logic.php');
         echo '<td id="day7" class="day-selector">' . convertFtValue(mToFt($avg_wave_height_per_day[7]))  . 'ft</td>';
     echo '</tr>';
     echo '</table>';
-    echo '<h3>Overview</h3>';
-      echo '<table>';
+    echo '<h2>Overview</h2>';
+      echo '<table id="forecast-table">';
         echo '<tr>';
             echo '<th></th>';
             echo '<th>WAVE<br>HEIGHT</th>';
@@ -141,55 +147,55 @@ include('forecast_logic.php');
             echo '<td>' . round($data_by_day[7]['airTemperature']) . '&degc</td>';
         echo '</tr>';
       echo '</table>';
-    echo '<h3>Tide</h3>';
-    echo '<div class="table-container">';
-        echo '<table class="tide-table">';
-        foreach ($tide_data_of_day as $rec) {
-            /* checking if the wave height data is negative value 
-            remove minus sign if true */
-            $h = round(ucfirst($rec['height']), 2);
-            if(substr($h, 0, 1) == '-'){
-                $h = substr($h, 1);
-            }
-            /* checking wether the current row will represnet high or low tide and 
-            rotate the tide icon accordingly */
-            $tide_type = ucfirst($rec['type']);
-            if($tide_type == 'High'){
-                $icon_html = '<td class="tide-icon"><i id="tide-icon" class="fa-solid fa-caret-up"></i></td>';
-            }else{
-                $icon_angle = 180;
-                $icon_html = '<td class="tide-icon"><i id="tide-icon2" class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
-            }
+    echo '<h2>Tide</h2>';
+    echo '<div class="table-wrapper">';
+        echo '<div class="table-container">';
+            echo '<table class="tide-table">';
+            foreach ($tide_data_of_day as $rec) {
+                /* checking if the wave height data is negative value 
+                remove minus sign if true */
+                $h = round(ucfirst($rec['height']), 2);
+                if(substr($h, 0, 1) == '-'){
+                    $h = substr($h, 1);
+                }
+                /* checking wether the current row will represnet high or low tide and 
+                rotate the tide icon accordingly */
+                $tide_type = ucfirst($rec['type']);
+                if($tide_type == 'High'){
+                    $icon_html = '<td class="tide-icon"><i id="tide-icon" class="fa-solid fa-caret-up"></i></td>';
+                }else{
+                    $icon_angle = 180;
+                    $icon_html = '<td class="tide-icon"><i id="tide-icon2" class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
+                }
 
-            echo '<tr>';
-            echo $icon_html;
-            echo '<td>' . ucfirst($rec['type']) . '</td>';
-            echo '<td>' . substr($rec['time'], 11, -9) . '</td>';
-            echo '<td>' . $h . 'm</td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-    echo '</div>';
-    echo '<div class="table-container">';
-        // Astro table
-        echo '<table class="astro-table">';
-            echo '<tr>';
-                echo '<td class="astro-titles">First Light</td>';
-                echo '<td>' . substr($astro_data['firstLight'], 11, -9) . '</td>';
-            echo '</tr>';
-            echo '<tr>';
-                echo '<td class="astro-titles">Sunrise</td>';
-                echo '<td>' . substr($astro_data['sunrise'], 11, -9) . '</td>';
-            echo '</tr>';
-            echo '<tr>';
-                echo '<td class="astro-titles">Sunset</td>';
-                echo '<td>' . substr($astro_data['sunset'], 11, -9) . '</td>';
-            echo '</tr>';
-            echo '<tr>';
-                echo '<td class="astro-titles">Last Light</td>';
-                echo '<td>' . substr($astro_data['lastLight'], 11, -9) . '</td>';
-            echo '</tr>';
-        echo '</table>';
+                echo '<tr>';
+                echo $icon_html;
+                echo '<td class="tide-td">' . ucfirst($rec['type']) . '</td>';
+                echo '<td class="tide-td">' . substr($rec['time'], 11, -9) . '</td>';
+                echo '<td class="tide-td">' . $h . 'm</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+            // Astro table
+            echo '<table class="astro-table">';
+                echo '<tr>';
+                    echo '<td class="astro-titles">First Light</td>';
+                    echo '<td>' . substr($astro_data['firstLight'], 11, -9) . '</td>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<td class="astro-titles">Sunrise</td>';
+                    echo '<td>' . substr($astro_data['sunrise'], 11, -9) . '</td>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<td class="astro-titles">Sunset</td>';
+                    echo '<td>' . substr($astro_data['sunset'], 11, -9) . '</td>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<td class="astro-titles">Last Light</td>';
+                    echo '<td>' . substr($astro_data['lastLight'], 11, -9) . '</td>';
+                echo '</tr>';
+            echo '</table>';
+        echo '</div>';
     echo '</div>';
     ?>
       <nav>
