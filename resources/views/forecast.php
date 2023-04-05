@@ -14,7 +14,7 @@ include('forecast_logic.php');
   <meta name="viewport" content="width=device-width", initial-scale="1.0">
   <title>Location Forecast</title>
   <script src="https://kit.fontawesome.com/6f214ab12c.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style-location-forecast.css">
+  <link rel="stylesheet" href="style-forecast.css">
 </head>
 <body>
     <div class="search-bar">
@@ -142,57 +142,75 @@ include('forecast_logic.php');
         echo '</tr>';
       echo '</table>';
     echo '<h3>Tide</h3>';
-    echo '<table>';
-    foreach ($tide_data_of_day as $rec) {
-        /* checking if the wave height data is negative value 
-        remove minus sign if true */
-        $h = round(ucfirst($rec['height']), 2);
-        if(substr($h, 0, 1) == '-'){
-            $h = substr($h, 1);
-        }
-        /* checking wether the current row will represnet high or low tide and 
-        rotate the tide icon accordingly */
-        $tide_type = ucfirst($rec['type']);
-        if($tide_type == 'High'){
-            $icon_html = '<td class="tide-icon"><i id="tide-icon" class="fa-solid fa-caret-up"></i></td>';
-        }else{
-            $icon_angle = 180;
-            $icon_html = '<td class="tide-icon"><i id="tide-icon2" class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
-        }
+    echo '<div class="table-container">';
+        echo '<table class="tide-table">';
+        foreach ($tide_data_of_day as $rec) {
+            /* checking if the wave height data is negative value 
+            remove minus sign if true */
+            $h = round(ucfirst($rec['height']), 2);
+            if(substr($h, 0, 1) == '-'){
+                $h = substr($h, 1);
+            }
+            /* checking wether the current row will represnet high or low tide and 
+            rotate the tide icon accordingly */
+            $tide_type = ucfirst($rec['type']);
+            if($tide_type == 'High'){
+                $icon_html = '<td class="tide-icon"><i id="tide-icon" class="fa-solid fa-caret-up"></i></td>';
+            }else{
+                $icon_angle = 180;
+                $icon_html = '<td class="tide-icon"><i id="tide-icon2" class="fa-solid fa-caret-up" style="transform: rotate(' . $icon_angle . 'deg)"></i></td>';
+            }
 
-        echo '<tr>';
-        echo $icon_html;
-        echo '<td>' . ucfirst($rec['type']) . '</td>';
-        echo '<td>' . substr($rec['time'], 11, -9) . '</td>';
-        echo '<td>' . $h . 'm</td>';
-        echo '</tr>';
-    }
-    echo '</table>';
-    // Astro table
-    echo '<table>';
-        echo '<tr>';
-            echo '<td class="astro-titles">First Light</td>';
-            echo '<td>' . substr($astro_data['firstLight'], 11, -9) . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo '<td class="astro-titles">Sunrise</td>';
-            echo '<td>' . substr($astro_data['sunrise'], 11, -9) . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo '<td class="astro-titles">Sunset</td>';
-            echo '<td>' . substr($astro_data['sunset'], 11, -9) . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo '<td class="astro-titles">Last Light</td>';
-            echo '<td>' . substr($astro_data['lastLight'], 11, -9) . '</td>';
-        echo '</tr>';
-    echo '</table>';
+            echo '<tr>';
+            echo $icon_html;
+            echo '<td>' . ucfirst($rec['type']) . '</td>';
+            echo '<td>' . substr($rec['time'], 11, -9) . '</td>';
+            echo '<td>' . $h . 'm</td>';
+            echo '</tr>';
+        }
+        echo '</table>';
+    echo '</div>';
+    echo '<div class="table-container">';
+        // Astro table
+        echo '<table class="astro-table">';
+            echo '<tr>';
+                echo '<td class="astro-titles">First Light</td>';
+                echo '<td>' . substr($astro_data['firstLight'], 11, -9) . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<td class="astro-titles">Sunrise</td>';
+                echo '<td>' . substr($astro_data['sunrise'], 11, -9) . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<td class="astro-titles">Sunset</td>';
+                echo '<td>' . substr($astro_data['sunset'], 11, -9) . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<td class="astro-titles">Last Light</td>';
+                echo '<td>' . substr($astro_data['lastLight'], 11, -9) . '</td>';
+            echo '</tr>';
+        echo '</table>';
+    echo '</div>';
     ?>
       <nav>
-        <a href="#">Favourites</a> |
-        <a href="#">Map</a> |
-        <a href="locations.php">Locations</a> |
-        <a href="#">Account</a>
+        <div class="menu">
+            <div class="menu-container">
+                <i id="menu-icon1" class="fa-solid fa-star" style="color: #f3f3f3;"></i>
+                <a href="#">Favourites</a> 
+            </div>
+            <div class="menu-container">
+                <i id="menu-icon2" class="fa-solid fa-map-location-dot" style="color: #f3f3f3;"></i>
+                <a href="#">Map</a>
+            </div>    
+            <div class="menu-container">
+                <i id="menu-icon3" class="fa-solid fa-list" style="color: #f3f3f3;"></i>
+                <a href="locations.php">Locations</a>
+            </div>
+            <div class="menu-container">
+                <i id="menu-icon4" class="fa-solid fa-circle-user" style="color: #f3f3f3;"></i>
+                <a href="#">Account</a>
+            </div>
+        </div>
       </nav>
       <script src="../js/locations-searchbar.js"></script>
       <script src="../js/refresh-tables.js"></script>
