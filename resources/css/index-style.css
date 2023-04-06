@@ -224,4 +224,8 @@ label{
     font-size: 18px;
 }
 
-  
+p{
+    font-size: 16px;
+    color: #f81c1c;
+    margin-bottom: -16px;
+}

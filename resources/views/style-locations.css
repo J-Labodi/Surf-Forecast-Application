@@ -3,9 +3,159 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Mulish', sans-serif;
+    background-color: rgb(21, 176, 151);
+}
+
+label{
+    padding: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(113, 247, 159);
+}
+form{
+    margin-top: 10px;
+    width: 100%;
+}
+#search{
+    background-color: #f3f3f3;
+    border: none;
+    padding: 5px;
+    width: 100%;
+    min-height: 30px;
+}
+input[type="text"]{
+    font-size: 16px;
+    font-weight: 600;
+    color: #2E2E2E;
+}
+form input[type="text"]:focus {
+    outline: 2px solid #71F79F;
+}
+
+.search-container {
+    position: relative;
+}
+  
+.search-container input[type="text"] {
+    padding-right: 25px; /* adjust the value to position the icon */
+}
+  
+.search-container i{
+    position: absolute;
+    top: 50%;
+    right: 5px; /* adjust the value to position the icon */
+    transform: translateY(-50%);
+}
+
+.location-name{
+    background-color: #4675F0;
+    color: #f3f3f3;
+}
+
+.redirect-icon{
+    background-color: #4675F0;
+}
+
+table th{
+    color: rgba(243, 243, 243, 1);
+}
+
+table td {
+    background-color: rgb(243, 243, 243);
+    border: solid #2e2e2e80;
+    border-radius: 2px;
+    color: #2E2E2E;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+a{
+    background-color: #4675F0;
+}
+.details-link i{
+    background-color: #4675F0;
+}
+
+.icon-container{
+    background-color: rgb(243, 243, 243);
+}
+
+p{
+    background-color: rgb(243, 243, 243);
+}
+
+i{
+    background-color: rgb(243, 243, 243);
 }
 
 
-table td {
-    border: solid black;
+#forecast-table{
+    min-width: 99%;
+    margin:1px;
+    border-collapse: collapse;
+}
+#forecast-table th{
+    font-size: 14px;
+    padding: 3px;
+}
+
+#forecast-table td{
+    padding: 6px;
+    font-size: 16px;
+}
+
+nav a{
+    background-color:rgba(38, 84, 124, 1);
+    text-decoration: none;
+    color: #f3f3f3;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+nav{
+    background-color:rgba(38, 84, 124, 1);
+    position: fixed;
+    bottom:0;
+    left: 0;
+    right: 0;
+}
+
+.menu{
+    display: flex;
+    justify-content: center;
+    background-color:rgba(38, 84, 124, 1);
+}
+
+.menu-container {
+    background-color:rgba(38, 84, 124, 1);
+    display: flex;
+    flex-direction: column; /* Stack the icon and title vertically */
+    align-items: center; /* Center the items horizontally */
+    padding: 10px;
+    border-left: 1px solid #f3f3f3; /* Add a left border */
+    margin-top: 3px; 
+    margin-bottom: 3px;
+    flex-basis: calc(100% / 4); /* Set the width to 25% of the container */
+}
+.menu-container:first-child {
+    border-left: none; /* Remove the left border for the first container */
+}
+
+.menu-container a {
+    text-align: center; /* Center the title text */
+    display: block; /* Display the title as a block element */
+}
+
+#menu-icon1{
+    background-color:rgba(38, 84, 124, 1);
+}
+#menu-icon2{
+    background-color:rgba(38, 84, 124, 1);
+}
+#menu-icon3{
+    background-color:rgba(38, 84, 124, 1);
+}
+#menu-icon4{
+    background-color:rgba(38, 84, 124, 1);
 }

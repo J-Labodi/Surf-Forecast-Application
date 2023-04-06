@@ -21,7 +21,7 @@ include('forecast_logic.php');
         <form>
             <label for="search">Search</label><br>
             <div class="search-container">
-                <input type="text" id="search" name="search" maxlength="50">
+                <input type="text" id="search" name="search" maxlength="42">
                 <i class="fa-solid fa-magnifying-glass" style="color: #15b097;"></i>
             </div>
         </form>          
