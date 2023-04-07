@@ -20,7 +20,7 @@ include('locations_logic.php');
         <form>
             <label for="search">Search</label><br>
             <div class="search-container">
-                <input type="text" id="search" name="search" maxlength="42">
+                <input type="text" id="search" name="search" maxlength="42" placeholder="">
                 <i class="fa-solid fa-magnifying-glass" style="color: #15b097;"></i>
             </div>
         </form>          
@@ -35,12 +35,51 @@ include('locations_logic.php');
         echo '<th>WIND INTENSITY</th>';
         echo '<th></th>';
       echo '</tr>';
-      foreach ($cursor as $document) {
+
+    $searchQuery = [];
+
+    if (isset($_GET['search'])) {
+      $searchQuery = ['name' => ['$regex' => $_GET['search'], '$options' => 'i']];
+    }
+
+    $cursor = $collection->find($searchQuery);
+
+    $exist = false;
+
+    foreach ($cursor as $document) {
+      echo '<tr>';
+        echo '<td class="location-name">';
+          echo $document->name;
+        echo '</td>';
+        echo '<td>';
+          echo convertFtValue(mToFt($document->waveheight));
+        echo 'ft</td>';
+        echo '<td>';
+          echo round($document->waveperiod);
+        echo 's<td>';
+          echo renderArrowIconWind($document->winddirection);
+        echo '</td>';
+        echo '<td>';
+          echo msToMph($document->windspeed);
+        echo 'mph</td>';
+          echo '<td class="redirect-icon">';
+          echo '<a href="#" class="details-link" data-name="' . $document->name . '"><i class="fa-solid fa-chevron-right fa-lg" style="color: #3dd6d0;"></i></a>';
+        echo '</td>';
+      echo '</tr>';
+
+      $exist = true;
+    }
+
+    if (!$exist) {
+
+      $documents = $collection->find();
+
+      foreach ($documents as $document) {
         echo '<tr>';
           echo '<td class="location-name">';
             echo $document->name;
           echo '</td>';
-          echo '<td>';            
+          echo '<td>';
             echo convertFtValue(mToFt($document->waveheight));
           echo 'ft</td>';
           echo '<td>';
@@ -51,13 +90,15 @@ include('locations_logic.php');
           echo '<td>';
             echo msToMph($document->windspeed);
           echo 'mph</td>';
-          echo '<td class="redirect-icon">';
+            echo '<td class="redirect-icon">';
             echo '<a href="#" class="details-link" data-name="' . $document->name . '"><i class="fa-solid fa-chevron-right fa-lg" style="color: #3dd6d0;"></i></a>';
           echo '</td>';
         echo '</tr>';
+
+        echo '<script>document.getElementsByName("search")[0].placeholder = "Sorry, no surf spots found.. please try again.";</script>';
       }
-      echo '</table>';
-        
+    }
+    echo '</table>';
     ?>
       <nav>
         <div class="menu">

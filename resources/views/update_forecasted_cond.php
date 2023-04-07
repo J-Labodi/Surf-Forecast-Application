@@ -14,8 +14,12 @@ foreach ($cursor as $document) {
     }
 }
 
-// obtain the timestamp of the latest API pull from database
-$db_ts = ($data['ts']);
+if(isset($data)){
+    // obtain the timestamp of the latest API pull from database
+    $db_ts = ($data['ts']);
+} else{
+    $db_ts = 0;
+}
 
 // execute remaining script if time difference greater than 60min
 $t = time();
