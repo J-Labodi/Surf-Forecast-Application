@@ -14,7 +14,7 @@ include('forecast_logic.php');
   <meta name="viewport" content="width=device-width", initial-scale="1.0">
   <title>Location Forecast</title>
   <script src="https://kit.fontawesome.com/6f214ab12c.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style-forecast.css">
+  <link rel="stylesheet" href="../css/style-forecast.css">
 </head>
 <body>
     <div class="search-bar">
