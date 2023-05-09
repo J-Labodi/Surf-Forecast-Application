@@ -1,5 +1,4 @@
 <?php
-// TODO CHANGE MONGO DB TIMEZONE AS IT SHOWS 1 HOUR LESS SO TS VALIDATION NOT WORKINg
 
 // obtain the timestamp of the latest API pull from database
 $collection = $client->forecast->current_conditions;
@@ -10,7 +9,6 @@ $db_ts = strtotime($document->ts);
 $t = time();
 $time_diff = $t - $db_ts;
 
-//TODO changed to 1
 if ($time_diff <= 3600){
     return;
 }
@@ -40,9 +38,6 @@ function callAPI($lat, $lng){
 
     return $result;
 }
-
-/* TODO refactor the code below to be more flexible,
-that can take more than 3 locations without hardcoding the calls */
 
 // Obtain locations from DB
 $collection = $client->forecast->locations;
